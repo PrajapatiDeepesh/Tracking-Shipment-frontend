@@ -36,3 +36,142 @@
     transform: rotate(360deg);
   }
 }
+
+.sidebar-item {
+  font-size: 1.2em;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #f8f9fa;
+  text-decoration: none;
+  color: #000;
+}
+/* App.css */
+
+/* Custom Navbar */
+/* App.css */
+
+/* Navbar Styles */
+.custom-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b); /* Gradient background */
+  padding: 10px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.navbar-icon {
+  font-size: 24px;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.navbar-icon:hover {
+  color: #ffeb3b; /* Bright yellow on hover */
+}
+
+.navbar-icons {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-icon.active-icon {
+  color: #28a745; /* Active icon color */
+}
+
+.navbar-icon.shipment-icon {
+  color: #fff; /* Color for shipment icon */
+  font-size: 30px; /* Larger size for the main icon */
+}
+
+
+/* Sidebar Styles */
+.sidebar-item {
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+}
+
+.sidebar-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Progress Bar Styles */
+/* App.css */
+
+/* Progress Bar Styles */
+/* App.css */
+
+/* Progress Bar Styles */
+.progress-bar-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  height: 20px;
+  margin-bottom: 20px;
+}
+
+.progress-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.progress-list li {
+  padding: 10px;
+  border-left: 4px solid transparent;
+  font-weight: bold;
+  position: relative;
+  transition: border-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.progress-list li::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #007bff;
+  transform: translateY(-50%);
+  transition: background-color 0.3s ease;
+}
+
+.progress-list li.active {
+  border-color: #007bff; /* Blue color for active step */
+}
+
+.progress-list li.completed {
+  border-color: #28a745; /* Green color for completed steps */
+}
+
+.progress-list li.completed::before {
+  background-color: #28a745; /* Green color for completed steps */
+}
+
+.progress-list li::before {
+  background-color: #007bff; /* Default color for upcoming steps */
+}
+
+/* Form Styles */
+form {
+  margin-top: 20px;
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+button {
+  margin-right: 10px;
+}
