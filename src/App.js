@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';  
-import { Container, Row, Col, Form, Button, ProgressBar, Nav } from 'react-bootstrap';
+import React, { useState, useRef, useEffect } from 'react';
+import { Container, Row, Col, Form, Button, Nav } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import JsBarcode from 'jsbarcode';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
-import axios from 'axios'; 
+import axios from 'axios';
 import { FaSearch, FaBell, FaCheckCircle, FaShippingFast, FaHome, FaUser, FaInfoCircle, FaEnvelope, FaCog } from 'react-icons/fa';
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
     receiverName: '',
     receiverAddress: '',
     shipmentDetails: '',
-    trackId: uuidv4(), // Generate a unique tracking ID
+    trackId: uuidv4(),
   });
 
   const barcodeRef = useRef(null);
@@ -32,28 +32,52 @@ function App() {
     }
   }, [formData.trackId, step]);
 
-  useEffect(() => {
-    fetchShipments();
-  }, []);
-
-  const fetchShipments = () => {
-    axios.get('http://localhost:5000/api/shipments')
-      .then(response => {
-        console.log('Fetched shipments:', response.data);
-      })
-      .catch(error => console.error(error));
-  };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleNext = () => {
-    setStep(step + 1);
+    if (validateForm()) {
+      setStep(step + 1);
+    }
   };
 
   const handlePrev = () => {
     setStep(step - 1);
+  };
+
+  const handleEdit = (stepNumber) => {
+    setStep(stepNumber);
+  };
+
+  const validateForm = () => {
+    if (step === 1 && (!formData.senderName || !formData.senderAddress)) {
+      alert('Please fill in both Sender Name and Sender Address');
+      return false;
+    }
+    if (step === 2 && (!formData.receiverName || !formData.receiverAddress)) {
+      alert('Please fill in both Receiver Name and Receiver Address');
+      return false;
+    }
+    if (step === 3 && !formData.shipmentDetails) {
+      alert('Please fill in Shipment Details');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        const response = await axios.post('http://localhost:5000/api/shipments', formData);
+        alert('Form submitted successfully!');
+        console.log('Saved shipment:', response.data);
+      } catch (err) {
+        alert('Error submitting form!');
+        console.error('Error:', err);
+      }
+    }
   };
 
   const handleDownloadBarcode = (format) => {
@@ -75,44 +99,16 @@ function App() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios.post('http://localhost:5000/api/shipments', formData)
-      .then(response => {
-        alert('Form submitted!');
-        setFormData({
-          senderName: '',
-          senderAddress: '',
-          receiverName: '',
-          receiverAddress: '',
-          shipmentDetails: '',
-          trackId: uuidv4(), // Generate a new unique tracking ID
-        });
-        setStep(1); // Reset to the first step
-      })
-      .catch(error => console.error(error));
-  };
-
-  const getProgressBarNow = () => {
-    switch (step) {
-      case 1: return 25;
-      case 2: return 50;
-      case 3: return 75;
-      case 4: return 100;
-      default: return 0;
-    }
-  };
-
   return (
     <div>
       {/* Custom Navbar */}
-      <div className="custom-navbar">
-        <FaShippingFast className="navbar-icon shipment-icon" />
-        <div className="navbar-icons">
-          <FaSearch className="navbar-icon" />
-          <FaBell className="navbar-icon" />
-          <FaCheckCircle className="navbar-icon active-icon" />
+      <div className="custom-navbar d-flex align-items-center justify-content-between p-2 bg-dark text-white">
+        <div className="navbar-icons d-flex align-items-center">
+          <FaSearch className="navbar-icon mx-2" style={{ cursor: 'pointer' }} />
+          <FaBell className="navbar-icon mx-2" style={{ cursor: 'pointer' }} />
+          <FaCheckCircle className="navbar-icon active-icon mx-2" style={{ cursor: 'pointer' }} />
         </div>
+        <FaShippingFast className="navbar-icon shipment-icon" style={{ fontSize: '1.5rem', cursor: 'pointer' }} />
       </div>
 
       <Container fluid>
@@ -203,6 +199,9 @@ function App() {
                   <Button variant="primary" onClick={handleNext}>
                     Next
                   </Button>
+                  <Button variant="warning" onClick={() => handleEdit(1)}>
+                    Edit Sender Info
+                  </Button>
                 </>
               )}
 
@@ -223,6 +222,9 @@ function App() {
                   </Button>
                   <Button variant="primary" onClick={handleNext}>
                     Next
+                  </Button>
+                  <Button variant="warning" onClick={() => handleEdit(2)}>
+                    Edit Receiver Info
                   </Button>
                 </>
               )}
@@ -253,26 +255,70 @@ function App() {
                   <Button variant="success" onClick={() => handleDownloadBarcode('pdf')}>
                     Download Barcode as PDF
                   </Button>
+                  <Button variant="warning" onClick={() => handleEdit(3)}>
+                    Edit Shipment Info
+                  </Button>
                 </>
               )}
             </Form>
           </Col>
 
           {/* Right Progress Sidebar */}
-          <Col md={2} className="bg-light">
-            <h4>Progress Status</h4>
-            <ProgressBar now={getProgressBarNow()} className="progress-bar" />
-            <ul className="progress-list">
-              <li className={step === 1 ? 'active' : ''}>Send</li>
-              <li className={step === 2 ? 'active' : ''}>Receive</li>
-              <li className={step === 3 ? 'active' : ''}>Shipment</li>
-              <li className={step === 4 ? 'active' : ''}>Tracking ID</li>
-            </ul>
+          <Col md={2} className="bg-light d-flex flex-column align-items-center justify-content-center">
+            <div style={{ width: '100%', marginTop: '20px', position: 'relative', textAlign: 'center' }}>
+              <div className="vertical-line" style={{
+                position: 'absolute',
+                top: '40px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '2px',
+                height: 'calc(100% - 80px)',
+                backgroundColor: '#007bff',
+                zIndex: 0,
+              }}></div>
+
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className={`circle ${step >= 1 ? 'active' : ''}`} style={circleStyle(step >= 1)}>
+                  1
+                </div>
+                <div className="label mt-2">Sender</div>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1, marginTop: '20px' }}>
+                <div className={`circle ${step >= 2 ? 'active' : ''}`} style={circleStyle(step >= 2)}>
+                  2
+                </div>
+                <div className="label mt-2">Receiver</div>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1, marginTop: '20px' }}>
+                <div className={`circle ${step >= 3 ? 'active' : ''}`} style={circleStyle(step >= 3)}>
+                  3
+                </div>
+                <div className="label mt-2">Shipment</div>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1, marginTop: '20px' }}>
+                <div className={`circle ${step >= 4 ? 'active' : ''}`} style={circleStyle(step >= 4)}>
+                  4
+                </div>
+                <div className="label mt-2">Tracking ID</div>
+              </div>
+            </div>
           </Col>
         </Row>
       </Container>
     </div>
   );
 }
+
+const circleStyle = (isActive) => ({
+  width: '40px',
+  height: '40px',
+  borderRadius: '50%',
+  backgroundColor: isActive ? '#007bff' : '#ddd',
+  color: isActive ? '#fff' : '#555',
+  lineHeight: '40px',
+  textAlign: 'center',
+  fontSize: '1.2rem',
+  margin: '0 auto',
+});
 
 export default App;

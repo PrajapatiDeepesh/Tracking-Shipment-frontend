@@ -56,22 +56,21 @@
 /* Navbar Styles */
 .custom-navbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #ff7e5f, #feb47b); /* Gradient background */
+  align-items: center;
+  background-color: #007bff; /* Blue background */
   padding: 10px 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #fff;
 }
 
-.navbar-icon {
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-left .app-name {
+  color: #fff; /* White text */
   font-size: 24px;
-  margin: 0 10px;
-  transition: color 0.3s ease;
-}
-
-.navbar-icon:hover {
-  color: #ffeb3b; /* Bright yellow on hover */
+  margin-left: 10px;
 }
 
 .navbar-icons {
@@ -79,14 +78,54 @@
   align-items: center;
 }
 
-.navbar-icon.active-icon {
-  color: #28a745; /* Active icon color */
+.navbar-icon {
+  color: #fff; /* White icons */
+  font-size: 20px;
+  margin-left: 25px; /* More spacing between icons */
+  cursor: pointer;
 }
 
-.navbar-icon.shipment-icon {
-  color: #fff; /* Color for shipment icon */
-  font-size: 30px; /* Larger size for the main icon */
+.active-icon {
+  color: #28a745; /* Active icon in green */
 }
+
+.sidebar {
+  height: 100vh;
+  padding-top: 20px;
+}
+
+.sidebar-item {
+  padding: 10px;
+  font-size: 18px;
+  color: #495057;
+}
+
+.sidebar-item:hover {
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  margin-top: 20px;
+}
+
+.progress-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.progress-list li {
+  padding: 10px 0;
+  font-size: 18px;
+  color: #6c757d;
+}
+
+.progress-list li.active {
+  font-weight: bold;
+  color: #007bff;
+}
+
+
 
 
 /* Sidebar Styles */
@@ -107,61 +146,65 @@
 /* App.css */
 
 /* Progress Bar Styles */
-.progress-bar-container {
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.progress-bar {
-  height: 20px;
-  margin-bottom: 20px;
-}
-
-.progress-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.progress-list li {
-  padding: 10px;
-  border-left: 4px solid transparent;
-  font-weight: bold;
-  position: relative;
-  transition: border-color 0.3s ease;
+/* Progress Sidebar Styles */
+.progress-sidebar {
+  background-color: #333;
+  color: white;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.progress-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
-.progress-list li::before {
-  content: '';
-  position: absolute;
-  left: -12px;
-  top: 50%;
-  width: 12px;
-  height: 12px;
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.progress-label {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.progress-dot {
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   background-color: #007bff;
-  transform: translateY(-50%);
-  transition: background-color 0.3s ease;
+  margin: 5px 0;
 }
 
-.progress-list li.active {
-  border-color: #007bff; /* Blue color for active step */
+.progress-line {
+  width: 2px;
+  height: 40px;
+  background-color: #007bff;
 }
 
-.progress-list li.completed {
-  border-color: #28a745; /* Green color for completed steps */
+.progress-step.active .progress-dot {
+  background-color: #4CAF50; /* Active step color */
 }
 
-.progress-list li.completed::before {
-  background-color: #28a745; /* Green color for completed steps */
+.progress-line.active {
+  background-color: #4CAF50; /* Active step color */
 }
 
-.progress-list li::before {
-  background-color: #007bff; /* Default color for upcoming steps */
-}
 
 /* Form Styles */
 form {
